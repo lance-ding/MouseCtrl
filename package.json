@@ -1,0 +1,11 @@
+{
+  "name": "mouse-ctrl",
+  "version": "1.0.0",
+  "description": "通过web服务页面控制鼠标",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "lance-ding",
+  "license": "ISC"
+}
