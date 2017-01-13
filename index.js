@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var robot = require('robotjs');
 
 app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
@@ -16,9 +17,28 @@ http.listen('8016', function(){
 io.on('connection', function(socket){
   console.log('已初始化 socket 连接');
 
-  socket.emit('ready', {some: 'data'});
-  socket.on('toServer', function(data){
-    console.log(data.some);
+  socket.emit('ready', {status: 'ready ...'});
+
+  socket.on('setMouse', function(data){
+    console.log(data);
+    var prevMousePos = robot.getMousePos();
+    switch(data.action){
+      case "top":
+        robot.moveMouse(prevMousePos.x, prevMousePos.y - 10);
+        break;
+      case "right":
+        robot.moveMouse(prevMousePos.x + 10, prevMousePos.y);
+        break;
+      case "bottom":
+        robot.moveMouse(prevMousePos.x, prevMousePos.y + 10);
+        break;
+      case "left":
+        robot.moveMouse(prevMousePos.x - 10, prevMousePos.y);
+        break;
+      case "click":
+        robot.mouseClick();
+        break;
+    }
   });
 
   socket.on('disconnect', function(){
