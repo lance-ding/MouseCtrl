@@ -61,6 +61,10 @@
         var hammertime = new Hammer(elems[i]);
         hammertime.on('press', function(ev) {
           var type = ev.target.getAttribute('data-type');
+          if(intervalId) {
+            clearInterval(intervalId);
+          }
+
           intervalId = setInterval(function(){
             socket.emit('setMouse', {action: type});
           }, 60);

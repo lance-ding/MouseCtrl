@@ -8,6 +8,10 @@ body {
     background: -webkit-gradient(linear, 0 0, 0 100%, from(#002179), to(#587DFF));
 }
 
+* {
+  user-select: none;
+}
+
 .mt-30 {
   margin-top: 30px;
 }

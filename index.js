@@ -16,7 +16,6 @@ app.get('/', function(req, res){
 app.get('/server', function(req, res){
   // 获取当前内网IP
   var interfaces = os.networkInterfaces();
-  console.log(interfaces);
   var localIp;
   for(var devName in interfaces){
     var interface = interfaces[devName];
@@ -47,7 +46,6 @@ http.listen(port, function(){
 
 io.on('connection', function(socket){
   console.log('已初始化 socket 连接');
-
   socket.emit('ready', {status: 'ready ...'});
 
   socket.on('setMouse', function(data){
