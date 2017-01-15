@@ -23,14 +23,14 @@ io.on('connection', function(socket){
     console.log(data);
     var prevMousePos = robot.getMousePos();
     switch(data.action){
-      case "top":
+      case "up":
         robot.moveMouse(prevMousePos.x, prevMousePos.y - 10);
+        break;
+      case "down":
+        robot.moveMouse(prevMousePos.x, prevMousePos.y + 10);
         break;
       case "right":
         robot.moveMouse(prevMousePos.x + 10, prevMousePos.y);
-        break;
-      case "bottom":
-        robot.moveMouse(prevMousePos.x, prevMousePos.y + 10);
         break;
       case "left":
         robot.moveMouse(prevMousePos.x - 10, prevMousePos.y);

@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta name="msapplication-tap-highlight" content="no" />
     <title>MouseCtrl</title>
     <link rel="stylesheet" href="styles/style.css">
   </head>
@@ -18,43 +19,63 @@
       </svg>
     </header>
     <div class="operation">
-      <div class="top row" onclick="go('top')">
-        <svg width="36px" height="10px" viewBox="100 0 36 10" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <div class="top row go" data-type="up">
+        <svg data-type="up" width="36px" height="10px" viewBox="100 0 36 10" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <polyline id="Path-6" stroke="#FFFFFF" stroke-width="1" fill="none" transform="translate(118.172788, 5.127678) scale(-1, -1) rotate(270.000000) translate(-118.172788, -5.127678) " points="122.345576 -12 114 4.95040435 122.303928 22.2553569"></polyline>
         </svg>
       </div>
       <div class="left-click-right-wrap row">
-        <div onclick="go('left')">
-          <svg width="10px" height="36px" viewBox="-1 97 10 36" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <div class="go" data-type="left">
+          <svg data-type="left" width="10px" height="36px" viewBox="-1 97 10 36" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <polyline id="Path-6" stroke="#FFFFFF" stroke-width="1" fill="none" transform="translate(4.172788, 115.127678) scale(-1, 1) rotate(180.000000) translate(-4.172788, -115.127678) " points="8.34557636 98 7.10542736e-15 114.950404 8.30392784 132.255357"></polyline>
           </svg>
         </div>
-        <div onclick="go('click')">
-          <svg width="92px" height="92px" viewBox="114 318 92 92" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <div>
+          <svg class="click-button" data-type="click" width="92px" height="92px" viewBox="114 318 92 92" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g id="Group-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(114.000000, 318.000000)">
               <circle id="Oval-3" fill="#FFFFFF" cx="46" cy="46" r="37"></circle>
               <circle id="Oval-3" fill-opacity="0.2" fill="#FFFFFF" cx="46" cy="46" r="46"></circle>
             </g>
           </svg>
         </div>
-        <div onclick="go('right')">
-          <svg width="10px" height="36px" viewBox="232 97 10 36" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <div class="go" data-type="right">
+          <svg data-type="right" width="10px" height="36px" viewBox="232 97 10 36" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <polyline id="Path-6" stroke="#FFFFFF" stroke-width="1" fill="none" transform="translate(237.172788, 115.127678) rotate(180.000000) translate(-237.172788, -115.127678) " points="241.345576 98 233 114.950404 241.303928 132.255357"></polyline>
           </svg>
         </div>
       </div>
-      <div class="bottom row" onclick="go('bottom')">
-        <svg width="36px" height="10px" viewBox="100 222 36 10" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <div class="bottom row go" data-type="down">
+        <svg data-type="down" width="36px" height="10px" viewBox="100 222 36 10" versi xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <polyline id="Path-6" stroke="#FFFFFF" stroke-width="1" fill="none" transform="translate(118.172788, 227.127678) scale(-1, 1) rotate(270.000000) translate(-118.172788, -227.127678) " points="122.345576 210 114 226.950404 122.303928 244.255357"></polyline>
         </svg>
       </div>
     </div>
     <script src="/javascripts/socket.io-1.4.5.js"></script>
+    <script src="/javascripts/hammer.min.js"></script>
     <script>
       var socket = io();
-      function go (action){
-        socket.emit('setMouse', {action: action});
+      // 方向事件
+      var intervalId;
+      var elems = document.getElementsByClassName('go');
+      for(i = 0; i < elems.length; i++) {
+        var hammertime = new Hammer(elems[i]);
+        hammertime.on('press', function(ev) {
+          var type = ev.target.getAttribute('data-type');
+          intervalId = setInterval(function(){
+            socket.emit('setMouse', {action: type});
+          }, 60);
+        });
+        hammertime.on('pressup', function(){
+          clearInterval(intervalId);
+        });
       }
+      // click 事件     
+      var clickElem = document.getElementsByClassName('click-button')
+      var clickEvent = new Hammer(clickElem[0]);
+      clickEvent.on('tap', function(ev){
+        socket.emit('setMouse', {action: 'click'});
+      })
+
       socket.on('ready', function(data){
         console.log(data.status);
       });
