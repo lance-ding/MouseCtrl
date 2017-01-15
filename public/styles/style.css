@@ -8,6 +8,14 @@ body {
     background: -webkit-gradient(linear, 0 0, 0 100%, from(#002179), to(#587DFF));
 }
 
+.mt-30 {
+  margin-top: 30px;
+}
+
+.color-white {
+  color: white;
+}
+
 header{
     position: relative;
 }
