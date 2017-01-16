@@ -2,7 +2,17 @@
   "name": "mouse-ctrl",
   "version": "1.0.0",
   "description": "通过web服务页面控制鼠标",
-  "main": "index.js",
+  "node-main": "index.js",
+  "main": "http://localhost:8016/server",
+  "window": {
+    "toolbar": true,
+    "frame": false,
+    "width": 320,
+    "height": 510,
+    "resizable": false,
+    "position": "center"
+
+  },
   "scripts": {
     "start": "node index.js"
   },
